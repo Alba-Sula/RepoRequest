@@ -1,0 +1,73 @@
+﻿@model  IEnumerable<RequestApplication.Models.RequestTable>
+@{
+    ViewBag.Title = "ListRequests";
+}
+
+<h2>ListRequests</h2>
+
+@if (Model == null)
+{
+    <p> There are no Requests in the database yet!</p>
+}
+else
+{
+    <table class="table request-table" >
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Arrival Date
+                </th>
+                <th>
+                    Registered Date
+                </th>
+                <th>
+                    File
+                </th>
+                <th>
+                    Edit|Delete
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                //using (Html.BeginForm("Delete", "Request", new { id = item.IDDBO_Request }))
+                //{
+                    <tr>
+                        <td>
+                            @item.Title
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @item.RequestDateArrival
+                        </td>
+                        <td>
+                            @item.RequestRegistered
+                        </td>
+                        <td>
+                            <a class="" >@*href="/Request/GettingStatusTable"*@
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a  href="/Request/EditRequest/@item.ID_Request">Edit</a>
+
+                            <input type="submit" value="Delete" />  @*onclick="return confirm('Are you sure u want to delete this information')"*@
+
+                        </td>
+
+                    </tr>
+                }
+          
+        </tbody>
+    </table>
+}
