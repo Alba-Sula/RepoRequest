@@ -1,36 +1,71 @@
-﻿@model  IEnumerable<RequestApplication.Models.RequestTable>
+﻿
+@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<RequestApplication.Models.RequestViewModel>
+
 @{
     ViewBag.Title = "ListRequests";
 }
 
-<h2>ListRequests</h2>
 
-@if (Model == null)
+@if (Model.Count == 0)
 {
-    <p> There are no Requests in the database yet!</p>
+    <div class="not-found flex-column d-flex justify-content-center align-items-center flex-lg-row flex-xl-row flex-md-row">
+        <img src="~/Content/themes/images/no_data.svg" />
+        <div>
+            <h2 class="mb-3">No Data</h2>
+            <h4>You do not have any requests in the database or the request you searched does not exist.<br /><a href="/Request/NewRequest">Add new request</a>&nbsp;or&nbsp;<a href="/Request/ListRequests">Return to main table</a> </h4>
+        </div>
+    </div>
 }
 else
 {
-    <table class="table request-table" >
+    <div class="d-flex flex-xl-row flex-lg-row flex-md-row justify-content-xl-between justify-content-lg-between justify-content-md-between flex-sm-column flex-column align-items-center">
+        <h1 class="mb-3">List Requests</h1>
+
+        @using (Html.BeginForm("ListRequests", "Request", FormMethod.Get))
+        {
+            <div class="input-group my-3" style="width:280px;">
+                <input id="search" name="search" type="text" class="form-control" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                    <input class="search-btn btn" type="submit" value="Search">
+                </div>
+            </div>
+        }
+    </div>
+
+
+    <table class="table">
         <thead>
             <tr>
                 <th>
-                    Name
+                    Title
                 </th>
                 <th>
                     Description
                 </th>
                 <th>
-                    Arrival Date
+                    Date Arrival
                 </th>
                 <th>
                     Registered Date
                 </th>
                 <th>
-                    File
+                    Status
                 </th>
                 <th>
-                    Edit|Delete
+                    File Name
+                </th>
+
+                <th>
+                    Finished Date
+                </th>
+                <th>
+                    Download
+                </th>
+                <th>
+                    Action
                 </th>
 
             </tr>
@@ -38,36 +73,83 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                //using (Html.BeginForm("Delete", "Request", new { id = item.IDDBO_Request }))
-                //{
-                    <tr>
-                        <td>
-                            @item.Title
-                        </td>
-                        <td>
-                            @item.Description
-                        </td>
-                        <td>
-                            @item.RequestDateArrival
-                        </td>
-                        <td>
-                            @item.RequestRegistered
-                        </td>
-                        <td>
-                            <a class="" >@*href="/Request/GettingStatusTable"*@
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a  href="/Request/EditRequest/@item.ID_Request">Edit</a>
+                <tr>
+                    <td>
+                        @item.Title
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.RequestDateArrival
+                    </td>
+                    <td>
+                        @item.RequestRegistered
+                    </td>
+                    <td>
+                        @item.TitleStatus
+                    </td>
+                    <td>
+                        @item.FileName
+                    </td>
+                    <td>
+                        @item.RequestFinished
+                    </td>
+                    <td class="download-icon">
+                        <a href="/Request/IfDownload/@item.ID_Request"><i class="fas fa-download"></i></a>
+                    </td>
+                    <td class="edit-icon">
+                        <a href="/Request/EditRequest/@item.ID_Request"><i class="fas fa-edit"></i></a>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#deleteModal" onclick="ConfirmDelete(@item.ID_Request)">Delete</button> @* @item.ID_Request <i class="fas fa-trash" onclick="ConfirmDelete(@item.ID_Request)"></i> data-toggle="modal" data-target="#deleteModal" *@
+                    </td>
+                </tr>
+            }
 
-                            <input type="submit" value="Delete" />  @*onclick="return confirm('Are you sure u want to delete this information')"*@
-
-                        </td>
-
-                    </tr>
-                }
-          
         </tbody>
+
     </table>
+
+
+    <input type="hidden" id="hiddenRequestId" />
+
+    @*---The modal---*@
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure u want to delete this request?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="DeleteRequest()">Confirm</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section scripts {
+
+    <script>
+
+        function ConfirmDelete(RequestId) {
+            $("#hiddenRequestId").val(RequestId);
+        }
+
+        function DeleteRequest() {
+            let idReq = $("#hiddenRequestId").val();
+            let url = "/Request/DeleteReq/" + idReq;
+            window.location.href = url;
+        }
+
+    </script>
 }

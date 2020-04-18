@@ -5,7 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="37b73ee570414f4a99d4fbcdc0c343c7" Name="Diagram1">
-        <EntityTypeShape EntityType="RequestsDBModel.RequestTable" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RequestsDBModel.RequestTable" Width="2" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="RequestsDBModel.Status" Width="1.5" PointX="0.75" PointY="5.375" />
+        <AssociationConnector Association="RequestsDBModel.FK_RequestTable_Status" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

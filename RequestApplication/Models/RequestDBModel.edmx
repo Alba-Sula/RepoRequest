@@ -4,25 +4,51 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="RequestsDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="RequestsDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="RequestTable">
           <Key>
             <PropertyRef Name="ID_Request" />
           </Key>
           <Property Name="ID_Request" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="RequestDateArrival" Type="nchar" MaxLength="10" />
-          <Property Name="RequestRegistered" Type="nchar" MaxLength="10" Nullable="false" />
-          <Property Name="RequestFinished" Type="nchar" MaxLength="10" />
-          <Property Name="DocumentName" Type="nchar" MaxLength="50" />
-          <Property Name="DocumentContent" Type="nvarchar(max)" />
+          <Property Name="RequestDateArrival" Type="datetime" />
+          <Property Name="RequestRegistered" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="RequestFinished" Type="datetime" />
+          <Property Name="FileName" Type="varchar" MaxLength="50" />
+          <Property Name="FileData" Type="varbinary(max)" />
+          <Property Name="ID_Status" Type="int" />
+          <Property Name="FileType" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="ID_Status" />
+          </Key>
+          <Property Name="ID_Status" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_RequestTable_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="0..1" />
+          <End Role="RequestTable" Type="Self.RequestTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="ID_Status" />
+            </Principal>
+            <Dependent Role="RequestTable">
+              <PropertyRef Name="ID_Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="RequestsDBModelStoreContainer">
           <EntitySet Name="RequestTable" EntityType="Self.RequestTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_RequestTable_Status" Association="Self.FK_RequestTable_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="RequestTable" EntitySet="RequestTable" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RequestsDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -31,17 +57,46 @@
             <PropertyRef Name="ID_Request" />
           </Key>
           <Property Name="ID_Request" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="RequestDateArrival" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="RequestRegistered" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="RequestFinished" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="DocumentName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-          <Property Name="DocumentContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RequestDateArrival" Type="DateTime" />
+          <Property Name="RequestRegistered" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RequestFinished" Type="DateTime" />
+          <Property Name="FileName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FileData" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ID_Status" Type="Int32" />
+          <NavigationProperty Name="Status" Relationship="RequestsDBModel.FK_RequestTable_Status" FromRole="RequestTable" ToRole="Status" />
+          <Property Name="FileType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="RequestsDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="RequestTables" EntityType="Self.RequestTable" />
+          <EntitySet Name="Status" EntityType="RequestsDBModel.Status" />
+          <AssociationSet Name="FK_RequestTable_Status" Association="RequestsDBModel.FK_RequestTable_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="RequestTable" EntitySet="RequestTables" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="ID_Status" />
+          </Key>
+          <Property Name="ID_Status" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RequestTables" Relationship="RequestsDBModel.FK_RequestTable_Status" FromRole="Status" ToRole="RequestTable" />
+        </EntityType>
+        <Association Name="FK_RequestTable_Status">
+          <End Type="RequestsDBModel.Status" Role="Status" Multiplicity="0..1" />
+          <End Type="RequestsDBModel.RequestTable" Role="RequestTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="ID_Status" />
+            </Principal>
+            <Dependent Role="RequestTable">
+              <PropertyRef Name="ID_Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -51,14 +106,25 @@
           <EntitySetMapping Name="RequestTables">
             <EntityTypeMapping TypeName="RequestsDBModel.RequestTable">
               <MappingFragment StoreEntitySet="RequestTable">
+                <ScalarProperty Name="FileType" ColumnName="FileType" />
+                <ScalarProperty Name="ID_Status" ColumnName="ID_Status" />
+                <ScalarProperty Name="FileData" ColumnName="FileData" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
                 <ScalarProperty Name="ID_Request" ColumnName="ID_Request" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="RequestDateArrival" ColumnName="RequestDateArrival" />
                 <ScalarProperty Name="RequestRegistered" ColumnName="RequestRegistered" />
                 <ScalarProperty Name="RequestFinished" ColumnName="RequestFinished" />
-                <ScalarProperty Name="DocumentName" ColumnName="DocumentName" />
-                <ScalarProperty Name="DocumentContent" ColumnName="DocumentContent" />
+                </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="RequestsDBModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ID_Status" ColumnName="ID_Status" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -9,18 +9,44 @@
 
 namespace RequestApplication.Models
 {
+    using Microsoft.Ajax.Utilities;
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class RequestTable
     {
+
         public int ID_Request { get; set; }
+        [Display(Name = "Request Title")]
+        [Required (ErrorMessage ="The title of the request is required")]
+
         public string Title { get; set; }
+
+        [Display(Name = "Request Description")]
         public string Description { get; set; }
-        public string RequestDateArrival { get; set; }
+
+        [Display(Name = "Request Date Arrival")]
+        public Nullable<System.DateTime> RequestDateArrival { get; set; }
+        [Display(Name = "Request Registered Date")]
+
         public string RequestRegistered { get; set; }
-        public string RequestFinished { get; set; }
-        public string DocumentName { get; set; }
-        public string DocumentContent { get; set; }
+
+        [Display(Name = "Request Finished Date")]
+        [ValidateFinish]//Custom Validation
+        public Nullable<System.DateTime> RequestFinished { get; set; }
+
+        [Display(Name = "File Name")]
+
+        public string FileName { get; set; }
+        [Display(Name = "File Data")]
+
+        public byte[] FileData { get; set; }
+
+        public Nullable<int> ID_Status { get; set; }
+
+        public string FileType { get; set; }
+    
+        public virtual Status Status { get; set; }
     }
 }

@@ -1,0 +1,106 @@
+﻿@model RequestApplication.Models.RequestTable
+
+@{
+    ViewBag.Title = "NewRequest";
+}
+
+<h2>NewRequest @ViewBag.Alba</h2>
+
+@using (Html.BeginForm("SavingNewRequest", "Request", FormMethod.Post, new { enctype = "multipart/form-data", @autocomplete = "off" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(modelReq => modelReq.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(modelReq => modelReq.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(modelReq => modelReq.Title)
+
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(modelReq => modelReq.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(modelReq => modelReq.Description, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(modelReq => modelReq.Description)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(modelReq => modelReq.RequestDateArrival, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(modelReq => modelReq.RequestDateArrival, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                @Html.ValidationMessageFor(modelReq => modelReq.RequestDateArrival)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(modelReq => modelReq.RequestFinished, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(modelReq => modelReq.RequestFinished, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                @Html.ValidationMessageFor(modelReq => modelReq.RequestFinished)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(modelReq => modelReq.Status.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(modelReq => modelReq.Status.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(modelReq => modelReq.Status.Title)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(modelReq => modelReq.Status.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(modelReq => modelReq.Status.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(modelReq => modelReq.Status.Description)
+            </div>
+        </div>
+
+        <input type="file" name="postedFile" id="inputFile" class="input-file" />
+
+        <br />
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary my-3" />
+            </div>
+        </div>
+    </div>
+}
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat:"yy/mm/dd"
+            });
+
+        });
+
+
+        $(document).ready(function () {
+            $('#inputFile').change(function (e) {
+                var fileName = e.target.files[0].name;
+                var fileType = fileName.match(".pdf$|.docs$|.doc$");
+                if (fileType == null) {
+                    alert('The file that you want to upload should be .pdf or .docs or .doc');
+                    $("#inputFile").val(null);
+                }
+
+            });
+        });
+    </script>
+}
+

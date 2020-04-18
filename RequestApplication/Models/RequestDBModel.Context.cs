@@ -26,5 +26,6 @@ namespace RequestApplication.Models
         }
     
         public virtual DbSet<RequestTable> RequestTables { get; set; }
+        public virtual DbSet<Status> Status { get; set; }
     }
 }
