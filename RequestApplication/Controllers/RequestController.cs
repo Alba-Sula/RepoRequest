@@ -17,7 +17,7 @@ namespace RequestApplication.Controllers
     public class RequestController : Controller
     {
         RequestsDBEntities db = new RequestsDBEntities();
-
+        //List of requests
         public ActionResult ListRequests(int? page, string search)
         {
             List<RequestTable> RequestList = db.RequestTables.Include("Status").ToList();
@@ -49,7 +49,7 @@ namespace RequestApplication.Controllers
             }
             return View(requestVMList.ToPagedList(page ?? 1, 10));
         }
-
+        //Edit View
         public ActionResult EditRequest(int? id)
         {
             RequestTable EditRequest = db.RequestTables.Where(r => r.ID_Request == id).FirstOrDefault();
@@ -57,7 +57,7 @@ namespace RequestApplication.Controllers
             return View(EditRequest);
         }
 
-
+        //Saving the edited request
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SaveRequest(RequestTable model)
@@ -97,7 +97,7 @@ namespace RequestApplication.Controllers
         }
 
 
-
+        //Saving the request
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SavingNewRequest(RequestTable modelReq, HttpPostedFileBase postedFile)
@@ -182,6 +182,7 @@ namespace RequestApplication.Controllers
                 }
             }
         }
+        //Deletes the request
         public ActionResult DeleteReq(int id)
         {
             RequestTable request = db.RequestTables.Find(id);
@@ -195,7 +196,9 @@ namespace RequestApplication.Controllers
 
             return RedirectToAction("ListRequests");
         }
-
+        //Check if on click to download button you have a file to download... 
+        //if you do than redirects you to download actionresult...
+        //if not than it redirects you to the same page
         public RedirectToRouteResult IfDownload(int id)
         {
             RequestTable request = db.RequestTables.Find(id);
@@ -206,7 +209,7 @@ namespace RequestApplication.Controllers
 
             return RedirectToAction("ListRequests");
         }
-
+        //Downloads the file
         public FileResult DownloadFile(int idRequest)
         {
 
