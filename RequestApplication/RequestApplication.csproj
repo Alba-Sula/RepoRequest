@@ -211,6 +211,14 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\themes\images\.net1.PNG" />
+    <Content Include="Content\themes\images\.net2.PNG" />
+    <Content Include="Content\themes\images\.net3.PNG" />
+    <Content Include="Content\themes\images\.net4.PNG" />
+    <Content Include="Content\themes\images\.net5.PNG" />
+    <Content Include="Content\themes\images\.net6.PNG" />
+    <Content Include="Content\themes\images\.net7.PNG" />
+    <Content Include="Content\themes\images\.net8.PNG" />
     <Content Include="Content\themes\images\no_data.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
